@@ -1,0 +1,12 @@
+target/
+.idea/
+.gradle/
+.idea/libraries
+*.iml
+*.orig
+logs/
+pom.xml.releaseBackup
+.project
+.settings
+.classpath
+
