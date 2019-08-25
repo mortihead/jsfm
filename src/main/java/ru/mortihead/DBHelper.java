@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 /**
  * Database work helper
  */
+@Deprecated
 public class DBHelper {
     static final private Logger logger = Logger.getLogger(DBHelper.class);
 

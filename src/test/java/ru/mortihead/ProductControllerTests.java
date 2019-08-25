@@ -15,8 +15,6 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.mortihead.model.Product;
 import ru.mortihead.repository.ProductRepository;
-import ru.mortihead.service.ProductService;
-import ru.mortihead.shared.Constants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +51,7 @@ public class ProductControllerTests {
     public void testAddProduct() throws Exception {
         HttpHeaders headers = new HttpHeaders();
         HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-        String url = createURLWithPort("/addproduct?name=BestJS&version=1.0.2&deprecation_date=01.01.2020&hype_level=10");
+        String url = "/addproduct?name=BestJS&version=1.0.2&deprecation_date=01.01.2020&hype_level=10";
         System.out.println(url);
         ResponseEntity<String> response = restTemplate.exchange(
                 url, HttpMethod.POST, entity, String.class);
@@ -63,12 +61,12 @@ public class ProductControllerTests {
 
     @Test
     public void testListProduct() throws Exception {
-        List<Product> books = Arrays.asList(
+        List<Product> js_frameworks = Arrays.asList(
                 new Product(2, "React", "16.9.0", null, 9),
                 new Product(3, "Node.js", "12.8.0", null, 8));
-        when(productRepository.findAll()).thenReturn(books);
+        when(productRepository.findAll()).thenReturn(js_frameworks);
 
-        String expected = om.writeValueAsString(books);
+        String expected = om.writeValueAsString(js_frameworks);
 
         ResponseEntity<String> response = restTemplate.getForEntity("/list", String.class);
         System.out.println(response.getBody());
@@ -78,17 +76,34 @@ public class ProductControllerTests {
     }
 
 
-//    @Test
-//    public void testRetrieveStudent() throws Exception {
-//        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-//        ResponseEntity<String> response = restTemplate.exchange(
-//                createURLWithPort("/students/1"), HttpMethod.GET, entity, String.class);
-//        String expected = "{\"id\":1,\"name\":\"Rajesh Bhojwani\",\"description\":\"Class 10\"}";
-//        JSONAssert.assertEquals(expected, response.getBody(), false);
-//    }
+    @Test
+    public void testSearchByName() throws Exception {
+        List<Product> js_frameworks = Arrays.asList(
+                new Product(2, "React", "16.9.0", null, 9));
+        when(productRepository.findByNameIs("React")).thenReturn(js_frameworks);
 
-    private String createURLWithPort(String uri) {
-        return "http://localhost:" + port + uri;
+        String expected = om.writeValueAsString(js_frameworks);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/search?name=React", String.class);
+        System.out.println(response.getBody());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONAssert.assertEquals(expected, response.getBody(), false);
     }
 
+    @Test
+    public void testSearchByPartialName() throws Exception {
+        List<Product> js_frameworks = Arrays.asList(
+                new Product(3, "Node.js", "12.8.0", null, 8),
+                new Product(4, "Backbone.js", "1.4.0", null, 8));
+        when(productRepository.findByNameContainingIgnoreCase("js")).thenReturn(js_frameworks);
+
+        String expected = om.writeValueAsString(js_frameworks);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/search?name=js&partial_match=1", String.class);
+        System.out.println(response.getBody());
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+    }
 }

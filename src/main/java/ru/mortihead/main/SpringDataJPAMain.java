@@ -11,6 +11,7 @@ import ru.mortihead.service.ProductService;
 /**
  * Simple tester for Spring-Data-JPA.
  **/
+@Deprecated
 public class SpringDataJPAMain {
     static final private Logger logger = Logger.getLogger(SpringDataJPAMain.class);
     public static void main(String[] args) {
