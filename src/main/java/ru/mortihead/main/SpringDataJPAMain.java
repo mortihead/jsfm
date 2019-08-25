@@ -32,7 +32,7 @@ public class SpringDataJPAMain {
 
         //Test specified find methods
         logger.info("findByName is 'React': " + productService.findByNameIs("React"));
-        logger.info("findByNameContainingIgnoreCase 'on': " + productService.findByNameContainingIgnoreCase("JS"));
+        logger.info("findByNameContainingIgnoreCase 'JS': " + productService.findByNameContainingIgnoreCase("JS"));
 
         ctx.close();
     }
