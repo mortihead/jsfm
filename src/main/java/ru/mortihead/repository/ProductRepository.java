@@ -24,8 +24,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
      *  because it supports the resolution of specific keywords inside method names. **/
     public List<Product> findByNameContainingIgnoreCase(String searchString);
 
-    /** You can define a JPA query.**/
-    @Query("select p from Product p where p.name = :name")
+    /** JPA query to select js products, order by version desc - last version first! .**/
+    @Query("select p from Product p where p.name = :name order by version desc")
     public List<Product> findByNameIs(@Param("name") String name);
 
 }

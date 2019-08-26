@@ -38,8 +38,6 @@ public class ProductControllerTests {
     @MockBean
     private ProductRepository productRepository;
 
-
-
     @Before
     public void init() {
         Optional<Product> product = Optional.of(new Product(1, "AngularJS", "1.7.8", null, 10));

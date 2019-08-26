@@ -7,9 +7,6 @@ plugins {
 }
 
 group 'ru.mortihead.app'
-version '1.0-SNAPSHOT'
-
-group = 'com.example'
 version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
@@ -43,5 +40,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile group: 'org.springframework', name: 'spring-test', version: '5.1.4.RELEASE'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
-
 }
