@@ -25,7 +25,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Product> findAll() {
         return productRepository.findAll();
     }
@@ -37,13 +37,20 @@ public class ProductService {
         }
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Product> findByNameIs(String name) {
         return productRepository.findByNameIs(name);
     }
 
-    @Transactional(readOnly=true)
+    @Transactional(readOnly = true)
     public List<Product> findByNameContainingIgnoreCase(String searchString) {
-        return productRepository.findByNameContainingIgnoreCase(searchString);
+        return productRepository.findByNameContainingIgnoreCase(searchString.toUpperCase());
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
+
+
 }

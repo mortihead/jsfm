@@ -23,10 +23,15 @@ public class SpringDataJPAMain {
         ProductService productService = ctx.getBean(ProductService.class);
 
         //Add some items
-        productService.add(new Product(1, "Angular", "1.7.8", null, 10));
-        productService.add(new Product(2, "React", "16.9.0", null, 9));
-        productService.add(new Product(3, "Node.js", "12.8.0", null, 8));
-        productService.add(new Product(3, "Backbone.js", "1.4.0", null, 8));
+//        productService.add(new Product(1L, "Angular", "1.7.8", null, 10));
+//        productService.add(new Product(2L, "React", "16.9.0", null, 9));
+//        productService.add(new Product(3L, "Node.js", "12.8.0", null, 8));
+//        productService.add(new Product(3L, "Backbone.js", "1.4.0", null, 8));
+
+        productService.add(new Product("Angular", "1.7.8", null, 10));
+        productService.add(new Product("React", "16.9.0", null, 9));
+        productService.add(new Product("Node.js", "12.8.0", null, 8));
+        productService.add(new Product("Backbone.js", "1.4.0", null, 8));
 
         //Test entity listing
         logger.info("findAll=" + productService.findAll());

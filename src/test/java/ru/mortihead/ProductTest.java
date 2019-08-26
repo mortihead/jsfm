@@ -22,7 +22,7 @@ public class ProductTest {
 
     @Test
     public void WhetAddProduct_ThenProductIsReturned(){
-        Product product = new Product(1, "Angular", "1.7.8", null, 10);
+        Product product = new Product( "Angular", "1.7.8", null, 10);
         productService.add(product);
         List<?> products =  productService.findByNameIs("Angular");
 
@@ -33,9 +33,9 @@ public class ProductTest {
 
     @Test
     public void WhenSearchByNameContainingIgnoreCaseJS_ThenProductWithJS_in_Name_IsReturned(){
-        productService.add(new Product(2, "React", "16.9.0", null, 9));
-        productService.add(new Product(3, "Node.js", "12.8.0", null, 8));
-        productService.add(new Product(4, "Backbone.js", "1.4.0", null, 8));
+        productService.add(new Product("React", "16.9.0", null, 9));
+        productService.add(new Product("Node.js", "12.8.0", null, 8));
+        productService.add(new Product("Backbone.js", "1.4.0", null, 8));
 
         List<Product> products = productService.findByNameContainingIgnoreCase("JS");
 

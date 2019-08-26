@@ -3,11 +3,12 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE'
     id 'java'
     id 'war'
-    id "org.springframework.boot" version "2.1.2.RELEASE"
+    id 'org.springframework.boot' version '2.1.7.RELEASE'
 }
 
 group 'ru.mortihead.app'
-version = '1.0.0-SNAPSHOT'
+version '1.0-SNAPSHOT'
+
 sourceCompatibility = '1.8'
 
 repositories {
@@ -23,21 +24,21 @@ test {
 dependencies {
     compile group: 'log4j', name: 'log4j', version: '1.2.17'
     // database
-    compile group: 'com.h2database', name: 'h2', version: '1.4.190'
     compile group: 'hsqldb', name: 'hsqldb', version: '1.8.0.7'
     // spring
-    compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
-    compile group: 'org.springframework', name: 'spring-orm', version: '5.1.4.RELEASE'
+    compile 'org.springframework:spring-context'
+    compile 'org.springframework:spring-orm'
     // spring jpa
-    compile group: 'org.springframework.data', name: 'spring-data-jpa', version: '2.1.2.RELEASE'
+    compile 'org.springframework.data:spring-data-jpa'
     // JPA Implementation (Hibernate)
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.3.7.Final'
-    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: '5.3.7.Final'
+    compile 'org.hibernate:hibernate-core'
+    compile 'org.hibernate:hibernate-entitymanager'
     // Rest
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.2.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-web'
 
     // junit
     testCompile 'junit:junit:4.12'
-    testCompile group: 'org.springframework', name: 'spring-test', version: '5.1.4.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.1.2.RELEASE'
+    testCompile 'org.springframework:spring-test'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+
 }

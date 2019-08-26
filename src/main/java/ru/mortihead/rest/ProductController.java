@@ -3,9 +3,12 @@ package ru.mortihead.rest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import ru.mortihead.exception.ProductNotFoundException;
+import ru.mortihead.exception.WrongSearchParamException;
 import ru.mortihead.model.Product;
 import ru.mortihead.repository.ProductRepository;
 import ru.mortihead.service.ProductService;
@@ -26,7 +29,7 @@ public class ProductController {
     static final private Logger logger = Logger.getLogger(ProductController.class);
 
     @Autowired
-    ProductService productService;
+    ProductRepository productRepository;
 
     /**
      * simple test rest method
@@ -41,6 +44,7 @@ public class ProductController {
 
     /**
      * Add product
+     * legacy format :-)
      * Usage example:
      * http://127.0.0.1:8080/addproduct?name=BestJS&version=1.0.2&deprecation_date=01.01.2020&hype_level=10
      *
@@ -64,19 +68,21 @@ public class ProductController {
             DateFormat format = new SimpleDateFormat("dd.MM.yyyy"); // Russian date format
             deprecationDate = format.parse(deprecationDateString);
         }
-        productService.add(new Product(null, name, version, deprecationDate, hypeLevel));
+        productRepository.save(new Product(name, version, deprecationDate, hypeLevel));
         return Constants.SUCCESS;
     }
 
     /**
      * Returm full list of js products
+     * Usage example:
+     * http://127.0.0.1:8080/products
      * TODO: make paging!
      * @return
      */
-    @RequestMapping("/list")
+    @RequestMapping("/products")
     public List<Product> list() {
         logger.info("list call");
-        return productService.findAll();
+        return productRepository.findAll();
     }
 
     /**
@@ -88,13 +94,46 @@ public class ProductController {
      */
     @RequestMapping("/search")
     public List<Product> search(@RequestParam(value = "name") String name,
-                                @RequestParam(value = "partial_match", defaultValue = "0") int partial_match) throws RuntimeException {
+                                @RequestParam(value = "partial_match", defaultValue = "0") int partial_match) throws RuntimeException, WrongSearchParamException {
         logger.info("search call");
         if (partial_match == 0) {
-            return productService.findByNameIs(name);
+            return productRepository.findByNameIs(name);
         } else if (partial_match == 1) {
-            return productService.findByNameContainingIgnoreCase(name);
-        } else throw new RuntimeException("Wrong partial_match param!");
+            return productRepository.findByNameContainingIgnoreCase(name.toUpperCase());
+        } else throw new WrongSearchParamException(partial_match);
+    }
+
+    @GetMapping("/products/{id}")
+    Product products(@PathVariable Long id) throws ProductNotFoundException {
+        return productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+    }
+
+    /**
+     * Update product by id
+     * HTTP: PUT
+     * request header: application/json
+     * request body: product in json format {"id":1,"name":"BestJS2222---","version":null,"deprecationDate":null,"hypeLevel":0}
+     * @param newProduct
+     * @param id
+     * @return ResponseEntity<Product>
+     * @throws ProductNotFoundException
+     */
+    @PutMapping("/products/{id}")
+    ResponseEntity<Product> updateProduct(@RequestBody Product newProduct, @PathVariable Long id) throws ProductNotFoundException {
+        Product product = productRepository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+
+        product.setName(newProduct.getName());
+        product.setDeprecationDate(newProduct.getDeprecationDate());
+        product.setVersion(newProduct.getVersion());
+        product.setHypeLevel(newProduct.getHypeLevel());
+
+        Product updated = productRepository.save(product);
+        return ResponseEntity.ok().body(updated);
+    }
+
+    @DeleteMapping("/products/{id}")
+    public void deleteStudent(@PathVariable long id) {
+        productRepository.deleteById(id);
     }
 
 }

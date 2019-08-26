@@ -22,9 +22,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     /** spring-jpa-data understands this method name,
      *  because it supports the resolution of specific keywords inside method names. **/
-    public List<Product> findByNameContainingIgnoreCase(String searchString);
+    @Query("select p from Product p where Upper(p.name) like %:searchString%")
+    public List<Product> findByNameContainingIgnoreCase(@Param("searchString") String searchString);
 
-    /** JPA query to select js products, order by version desc - last version first! .**/
+    /** You can define a JPA query.**/
     @Query("select p from Product p where p.name = :name order by version desc")
     public List<Product> findByNameIs(@Param("name") String name);
 
