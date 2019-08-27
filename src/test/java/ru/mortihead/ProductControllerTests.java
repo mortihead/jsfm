@@ -106,14 +106,29 @@ public class ProductControllerTests {
         JSONAssert.assertEquals(expected, response.getBody(), false);
     }
 
+
+    @Test
+    public void testListProducts() throws Exception {
+        System.out.println("testListProducts()");
+
+        List<Product> js_frameworks = Arrays.asList(
+                new Product( "Node.js", "12.8.0", null, 8),
+                new Product( "Backbone.js", "1.4.0", null, 8));
+        when(productRepository.findAll()).thenReturn(js_frameworks);
+        String expected = om.writeValueAsString(js_frameworks);
+
+        ResponseEntity<String> response = restTemplate.getForEntity("/products", String.class);
+        System.out.println(response.getBody());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        JSONAssert.assertEquals(expected, response.getBody(), false);
+    }
+
     @Test
     public void testUpdateProduct() throws Exception {
         System.out.println("testUpdateProduct()");
 
-
         Optional<Product> product = Optional.of(new Product( "AngularJS", "1.7.8", null, 10));
         when(productRepository.findById(1L)).thenReturn(product);
-
 
         JSONObject updateBody = new JSONObject();
         updateBody.put("name", "React-edited");

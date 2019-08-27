@@ -3,6 +3,7 @@ package ru.mortihead.rest;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -132,7 +133,12 @@ public class ProductController {
     }
 
     @DeleteMapping("/products/{id}")
-    public void deleteStudent(@PathVariable long id) {
+    public void deleteStudent(@PathVariable long id) throws ProductNotFoundException {
+        try {
+            productRepository.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            throw new ProductNotFoundException(id);
+        }
         productRepository.deleteById(id);
     }
 
